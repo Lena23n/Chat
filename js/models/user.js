@@ -1,4 +1,4 @@
-var Chat = Backbone.Model.extend ({
+var User = Backbone.Model.extend ({
 	defaults: {
 		color: '#C2BEBE'
 	}

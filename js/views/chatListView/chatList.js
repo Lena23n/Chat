@@ -1,14 +1,19 @@
 var ChatListView = Backbone.View.extend({
 	el: '#chat',
 	template: _.template($('#chat-view').html()),
+	vent: null,
 	initialize : function () {
 		var self = this;
+		this.vent = vent;
 
 		this.listenTo(this.model, 'all', this.render);
-		this.model.add({nickname: 'lena23n', msg: 'hi'});
 
-		vent.on('send', function (item){
+		this.vent.on('send', function (item){
 			self.addMessage(item);
+		});
+
+		this.vent.on('deleteLastMessage', function (id) {
+			self.deleteLastMessage(id);
 		});
 	},
 	render : function () {
@@ -25,6 +30,20 @@ var ChatListView = Backbone.View.extend({
 
 		this.$el.html(html);
 		return this;
+	},
+	deleteLastMessage : function (id) {
+		var collection = this.model.toJSON();
+
+	var indexOfModel = _.findLastIndex(collection, {
+			userId: id
+		});
+
+		if(indexOfModel == -1) {
+			alert("You don't have any message");
+			return false;
+		}
+
+		this.model.at(indexOfModel).destroy();
 	},
 	addMessage : function (item) {
 		this.model.add(item);

@@ -5,16 +5,23 @@ var UserListView = Backbone.View.extend({
 		"click .send":  "send",
 		"click #add-user" : "addUser",
 		"click .delete" : "deleteUser",
-		"click .save-user" : "saveUser"
+		"click .save-user" : "saveUser",
+		"click .delete-last-msg" : "deleteLastMessage"
 	},
 	inputs : {
 		nickname: null,
 		color: null,
 		message: null
 	},
+	vent: null,
 	initialize : function () {
+		var id;
+
+		this.vent = vent;
 		this.listenTo(this.model, 'all', this.render);
-		this.model.add({nickname: 'Lenko'});
+
+		id = this.generateId();
+		this.model.add({id: id, nickname: 'Lenko'});
 	},
 	render : function () {
 		if(!this.template) {
@@ -36,7 +43,8 @@ var UserListView = Backbone.View.extend({
 		return idx;
 	},
 	addUser : function () {
-		this.model.add({});
+		var id = this.generateId();
+		this.model.add({id:id});
 	},
 	deleteUser : function (e) {
 		var formIndex = this.getFormIndex(e);
@@ -51,9 +59,7 @@ var UserListView = Backbone.View.extend({
 		if(!isNickSaved) {
 			return false;
 		}
-		//isNickSame = this.model.where({name: isNickSaved});
-		//
-		//isFieldNickCorrect = isNickSaved && (isNickSame.length == 0);
+
 		return isNickSaved;
 	},
 	checkIsNickSame : function (nick) {
@@ -68,6 +74,15 @@ var UserListView = Backbone.View.extend({
 
 		isNickSame = true;
 		return isNickSame;
+	},
+	generateId : function() {
+		var prefix, mainNumber, id;
+
+		prefix = Math.floor((Math.random() * 100) + 1);
+		mainNumber = new Date().getTime();
+
+		id = mainNumber + "_" + prefix;
+		return id;
 	},
 	saveUser : function (e) {
 		var formIndex, nickname,  isNickSame;
@@ -86,6 +101,17 @@ var UserListView = Backbone.View.extend({
 		this.model.at(formIndex).set({
 			nickname: nickname
 		})
+	},
+	deleteLastMessage : function (e) {
+		var formIndex, modelToChange;
+
+		formIndex = this.getFormIndex(e);
+
+		modelToChange = this.model.at(formIndex);
+
+		this.vent.trigger('deleteLastMessage',
+			modelToChange.toJSON().id
+		);
 	},
 	send : function (e) {
 		var formIndex, isNickSaved;
@@ -106,20 +132,17 @@ var UserListView = Backbone.View.extend({
 			return false;
 		}
 
-		vent.trigger('send', {
+		this.vent.trigger('send', {
+			userId: this.model.at(formIndex).toJSON().id,
 			nickname: this.inputs.nickname,
 			msg: this.inputs.message.val(),
 			color: this.inputs.color.val()
 		});
 
-
-
 		this.model.at(formIndex).set({
-			color: this.inputs.color.val(),
-			lastMessage: this.inputs.nickname
+			color: this.inputs.color.val()
 		});
 
-		console.log(this.model);
 		this.inputs.message.val('');
 	}
 });

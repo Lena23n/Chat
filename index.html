@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<div id="chatWrap">
+<div id="chat-wrap" class="clearfix">
 	<h3>Chat Backbone.js</h3>
 
 	<div id="chat"></div>
@@ -42,8 +42,10 @@
 		</div>
 		<div>
 			<textarea class="msg" placeholder="Enter your Message"></textarea>
+		</div>
+		<div class="buttons">
 			<button class="send">Send</button>
-			<button class="delete-last-msg"></button>
+			<button class="delete-last-msg">Delete last message</button>'
 		</div>
 	</div>
 	<% }) %>
@@ -55,6 +57,7 @@
 <script src="js/lib/backbone-min.js"></script>
 <!--<script src="js/lib/backbone.localStorage.js"></script>-->
 <script src="js/models/chat.js"></script>
+<script src="js/models/user.js"></script>
 <script src="js/collections/chatList/chatList.js"></script>
 <script src="js/collections/userList/userList.js"></script>
 <script src="js/views/chatListView/chatList.js"></script>

@@ -22,11 +22,16 @@ var Container = Backbone.View.extend({
 	userCollection: null,
 
 	initialize : function () {
+
 		this.chatCollection = new application.constructors.chatCollaction();
-		this.chatList = new application.constructors.chatListView({model: this.chatCollection});
+		this.chatList = new application.constructors.chatListView({
+			model: this.chatCollection
+		});
 
 		this.userCollection = new application.constructors.userCollaction();
-		this.userList = new application.constructors.userListView({model: this.userCollection});
+		this.userList = new application.constructors.userListView({
+			model: this.userCollection
+		});
 	}
 });
 
