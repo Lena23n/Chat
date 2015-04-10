@@ -21,7 +21,7 @@ var UserListView = Backbone.View.extend({
 		this.listenTo(this.model, 'all', this.render);
 
 		id = this.generateId();
-		this.model.add({id: id, nickname: 'Lenko'});
+		this.model.add({idAttribute: id, nickname: 'Lenko'});
 	},
 	render : function () {
 		if(!this.template) {
@@ -44,10 +44,12 @@ var UserListView = Backbone.View.extend({
 	},
 	addUser : function () {
 		var id = this.generateId();
-		this.model.add({id:id});
+		this.model.add({idAttribute:id});
 	},
 	deleteUser : function (e) {
 		var formIndex = this.getFormIndex(e);
+
+		console.log(this.model.at(formIndex))
 
 		this.model.at(formIndex).destroy();
 	},
@@ -110,7 +112,7 @@ var UserListView = Backbone.View.extend({
 		modelToChange = this.model.at(formIndex);
 
 		this.vent.trigger('deleteLastMessage',
-			modelToChange.toJSON().id
+			modelToChange.toJSON().idAttribute
 		);
 	},
 	send : function (e) {
@@ -133,7 +135,7 @@ var UserListView = Backbone.View.extend({
 		}
 
 		this.vent.trigger('send', {
-			userId: this.model.at(formIndex).toJSON().id,
+			userId: this.model.at(formIndex).toJSON().idAttribute,
 			nickname: this.inputs.nickname,
 			msg: this.inputs.message.val(),
 			color: this.inputs.color.val()
